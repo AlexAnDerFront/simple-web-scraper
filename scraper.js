@@ -4,10 +4,10 @@ const fs = require("fs");
 
 async function loadPage() {
 
-    let browser = await puppeteer.launch(); //starts  brwoser isntance
+    let browser = await puppeteer.launch(); //starts  brwoser instance
     let page = await browser.newPage(); // starts page instance
 
-    await page.goto('https://gp-one.com');  // select webpage to visit
+    await page.goto('https://based.win');  // select webpage to visit
 
     let pageTitle = await page.title(); // get page title
     let pageContents = await page.content();  // get page content
@@ -36,7 +36,16 @@ async function loadPage() {
     
     await page.screenshot({path: "screenshot.png"});   // get page screenshot
     await page.pdf({path: "web.pdf", format: "a4"});   // get page pdf
+    page.evaluate
 
+    let textSelector = 'li.ast-grid-common-col:nth-child(1) > div:nth-child(2) > a:nth-child(1) > h2:nth-child(1)';
+    let selectedContent = await page.evaluate((sel) => {
+
+     return document.querySelector(sel).innerText;
+
+    }, textSelector)
+
+    console.log('Returned Page content:', selectedContent)
     await browser.close();
 }
 loadPage();
