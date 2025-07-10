@@ -12,13 +12,14 @@ async function loadPage() {
     let pageTitle = await page.title(); // get page title
     let pageContents = await page.content();  // get page content
     
-    console.log(pageContents);
+/*     console.log(pageContents);
     console.log('pageTitle= ', pageTitle);
-    console.log('it worked');
+    console.log('it worked'); */
 
     const filesToDelete = [
         path.join(__dirname, 'codes', 'web.pdf'),
-        path.join(__dirname, 'codes', 'screenshot.png'),
+        path.join(__dirname, 'codes', 'screenshot1.png'),
+        path.join(__dirname, 'codes', 'screenshot2.png')
     ];
 
     for (const filePath of filesToDelete) { // delete old files function
@@ -34,7 +35,7 @@ async function loadPage() {
       }
     }
     
-    await page.screenshot({path: "screenshot.png"});   // get page screenshot
+    await page.screenshot({path: "screenshot1.png"});   // get page screenshot
     await page.pdf({path: "web.pdf", format: "a4"});   // get page pdf
     page.evaluate
 
@@ -44,8 +45,15 @@ async function loadPage() {
      return document.querySelector(sel).innerText;
 
     }, textSelector)
-
+    
     console.log('Returned Page content:', selectedContent)
+
+    let linkselect ='li.ast-grid-common-col:nth-child(1) > div:nth-child(2) > a:nth-child(1)'
+
+    page.click(linkselect);
+    await new Promise(resolve => setTimeout(resolve, 5000));
+    await page.waitForSelector('.variations_form', { visible: true });
+    await page.screenshot({path: "screenshot2.png"}); 
     await browser.close();
 }
 loadPage();
