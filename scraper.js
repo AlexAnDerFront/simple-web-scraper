@@ -48,6 +48,20 @@ async function loadPage() {
     }, searchTerm);
     await new Promise(resolve => setTimeout(resolve, 2000));
     await page.screenshot({path: "screenshot3.png"}); 
-    await browser.close();
+
+    let imageselect = 'li.ast-grid-common-col:nth-child(1) > div:nth-child(1) > a:nth-child(1) > img:nth-child(1)'
+
+  // Get the image URL (change selector as needed)
+  const imageUrl = await page.$eval(imageselect, img => img.src);
+
+  // Download the image using Node.js (not via browser download)
+  const viewSource = await page.goto(imageUrl);
+  const buffer = await viewSource.buffer();
+
+  // Save the image to disk
+  const downloadPath = path.resolve('./downloads');
+  if (!fs.existsSync(downloadPath)) fs.mkdirSync(downloadPath);
+  fs.writeFileSync(path.join(downloadPath, 'downloaded_image.jpg'), buffer);
+      await browser.close();
 }
 loadPage();
