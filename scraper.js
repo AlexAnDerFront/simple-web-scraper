@@ -49,9 +49,10 @@ async function loadPage() {
     await new Promise(resolve => setTimeout(resolve, 2000));
     await page.screenshot({path: "screenshot3.png"}); 
 
+    // (change selector as needed)
     let imageselect = 'li.ast-grid-common-col:nth-child(1) > div:nth-child(1) > a:nth-child(1) > img:nth-child(1)'
 
-    // Get the image URL (change selector as needed)
+    // Get the image URL 
     const imageUrl = await page.$eval(imageselect, img => img.src);
 
     // Download the image using Node.js 
