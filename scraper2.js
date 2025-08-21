@@ -13,34 +13,29 @@ import puppeteer from "puppeteer";
     const loadMoreSelector = "button.ipc-see-more__button";
     let retryCount = 0;
     const maxRetries = 3;
-
-       while (true) {
+    // Loop to handle dynamic loading and clciking of the "load more" button
+       while (true) { 
         try {
             // Wait for the button to appear on the page, with a timeout.
             await page.waitForSelector(loadMoreSelector, { timeout: 5000 });
-
-            // Use the more reliable page.click method to click the button.
             // This handles scrolling the element into view automatically.
             await page.click(loadMoreSelector);
-            
             // Reset the retry count on a successful click.
             retryCount = 0;
-
             // Wait a moment for the new content to load using the correct function.
             await new Promise(resolve => setTimeout(resolve, 2000));
-
         } catch (err) {
             // If the selector times out, it means the button is no longer visible.
-            // We'll increment our retry counter.
+            // increment our retry counter.
             console.log(`Button not found. Retrying... (${retryCount + 1}/${maxRetries})`);
             retryCount++;
 
             if (retryCount >= maxRetries) {
-                // If we've reached the max retries, we assume the button is gone for good and break the loop.
+                // Reached max retries
                 console.log("No more 'Load more' button after multiple retries. Stopping.");
                 break;
             }
-            // Wait a little before the next retry to avoid hammering the server.
+            // Wait a little before the next retry 
             await new Promise(resolve => setTimeout(resolve, 2000));
         }
     }
@@ -51,9 +46,9 @@ import puppeteer from "puppeteer";
         const rows = document.querySelectorAll(".ipc-metadata-list-summary-item");
         return Array.from(rows).map((row, index) => {
             const rank = index + 1;
-            const title = row.querySelector("h3.ipc-title__text")?.innerText || "";
-            const year = row.querySelector("span.ipc-metadata-list-item__list-content-item")?.innerText || "";
-            const duration = row.querySelector("span.ipc-inline-list__item")?.innerText || "";
+            const title = row.querySelector("h3.ipc-title__text")?.innerText.trim().replace(/\d+\.\s*/, '') || "";
+            const year = row.querySelector(".dli-title-metadata-item:first-of-type")?.innerText || "";
+            const duration = row.querySelector(".dli-title-metadata-item:nth-of-type(2)")?.innerText || "";
             const rating = row.querySelector(".ipc-rating-star--rating")?.innerText || "";
             return { rank, title, year, duration, rating };
         });
@@ -61,7 +56,7 @@ import puppeteer from "puppeteer";
 
     console.log(`Scraped ${movies.length} movies`);
 
-    // Optionally, format Markdown table like before
+    //format Markdown table like before
     function formatMarkdownTable(data) {
         const headers = ["Rank", "Title", "Year", "Duration", "Rating"];
         const rows = data.map(m => [
