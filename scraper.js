@@ -12,9 +12,9 @@ async function loadPage() {
     let pageTitle = await page.title(); // get page title
     let pageContents = await page.content();  // get page content
     
-/*     console.log(pageContents);
+    console.log(pageContents);
     console.log('pageTitle= ', pageTitle);
-    console.log('it worked'); */
+    console.log('it worked'); 
     
     await page.screenshot({path: "screenshot1.png"});   // get page screenshot
     await page.pdf({path: "web.pdf", format: "a4"});   // get page pdf
